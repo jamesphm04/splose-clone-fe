@@ -1,0 +1,34 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { authAPI } from '../../services/mockAPI';
+import { useAuth as useAuthContext } from '../../contexts/AuthContext';
+import type { LoginCredentials } from '../../types';
+import type { MessageInstance } from 'antd/es/message/interface';
+import './styles.css';
+
+export const useAuth = (antMessage: MessageInstance) => {
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const { login } = useAuthContext();
+
+    const handleLogin = async (values: LoginCredentials) => {
+        try {
+            setLoading(true);
+            const response = await authAPI.login({ email: values.email, password: values.password });
+            if (response.success && response.user && response.token) {
+                await login(response.user, response.token);
+                antMessage.success('Login successful');
+                navigate('/dashboard');
+            } else {
+                antMessage.error(response.message || 'Login failed');
+            }
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Unknown error';
+            antMessage.error(`An error occurred during login: ${message}`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { loading, handleLogin };
+};
