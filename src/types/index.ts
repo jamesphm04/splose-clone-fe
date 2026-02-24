@@ -1,7 +1,7 @@
 export interface User {
     id: string;
     email: string;
-    name: string;
+    username: string;
 }
 
 export interface LoginCredentials {
@@ -29,6 +29,7 @@ export interface ProgressNote {
 export interface AuthResponse {
     success: boolean;
     user?: User;
-    token?: string;
+    accessToken?: string;
+    refreshToken?: string;
     message?: string;
 }

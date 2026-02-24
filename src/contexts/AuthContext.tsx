@@ -4,7 +4,7 @@ import type { User } from '../types';
 interface AuthContextType {
     user: User | null;
     token: string | null;
-    login: (user: User, token: string) => Promise<void>;
+    login: (user: User, accessToken: string, refreshToken: string) => Promise<void>;
     logout: () => void;
     isAuthenticated: boolean;
 }
@@ -16,19 +16,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [token, setToken] = useState<string | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    const login = async (user: User, token: string) => {
+    const login = async (user: User, accessToken: string, refreshToken: string) => {
         setUser(user);
         setToken(token);
-        localStorage.setItem('authToken', token);
         localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
         setIsAuthenticated(true);
     }
 
     const logout = () => {
         setUser(null);
         setToken(null);
-        localStorage.removeItem('authToken');
         localStorage.removeItem('user');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
         setIsAuthenticated(false);
     };
 

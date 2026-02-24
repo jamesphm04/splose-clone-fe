@@ -12,9 +12,10 @@ export const authAPI = {
                 user: {
                     id: '1',
                     email: credentials.email,
-                    name: 'Dr. Sarah Johnson'
+                    username: 'Dr. Sarah Johnson'
                 },
-                token: 'mock-jwt-token-' + Date.now()
+                accessToken: 'mock-access-token-' + Date.now(),
+                refreshToken: 'mock-refresh-token-' + Date.now()
             };
         }
 
