@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { authAPI } from '../../services/api';
 import { useAuth as useAuthContext } from '../../contexts/AuthContext';
 import type { LoginCredentials } from '../../types';
-import type { MessageInstance } from 'antd/es/message/interface';
 import './styles.css';
+import { message as antMessage } from 'antd';
 
-export const useAuth = (antMessage: MessageInstance) => {
+export const useAuth = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { login } = useAuthContext();

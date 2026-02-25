@@ -1,10 +1,10 @@
 import React from 'react'
 import { useAuth } from './useAuth';
-import { Form, Input, Button, Card, message as antMessage } from 'antd';
+import { Form, Input, Button, Card } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 const Auth: React.FC = () => {
-    const { loading, handleLogin } = useAuth(antMessage);
+    const { loading, handleLogin } = useAuth();
 
     return (
         <div className="login-container">

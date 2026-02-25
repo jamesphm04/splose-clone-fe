@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type { AuthResponse, LoginCredentials } from '../types';
+import { PatientModel, type PatientDB, type PatientAPIFetchResponse, type PatientAPIGetByIdResponse, type Patient, type PatientAPICreateResponse } from '../types/Patient';
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api/v1',
@@ -56,5 +57,57 @@ export const authAPI = {
         } catch (err: any) {
             return { success: false, message: err.response?.data?.error || err.message || 'Login failed' };
         }
-    }
+    },
+    // async logout(): Promise<void> {
+    //     await api.post('/auth/logout');
+    // }
 };
+
+export const patientAPI = {
+    async fetch(): Promise<PatientAPIFetchResponse> {
+        try {
+            const { data } = await api.get('/patients');
+            if (data.success) {
+                const response: PatientAPIFetchResponse = {
+                    success: true,
+                    data: data.data.map(
+                        (db: any) => PatientModel.fromDB(db)
+                    ),
+                    message: data.message
+                }
+                return response;
+            }
+            return { success: false, message: data.error || 'Failed to fetch patients' };
+        } catch (err: any) {
+            return { success: false, message: err.response?.data?.error || err.message || 'Failed to fetch patients' };
+        }
+    },
+    async getById(id: string): Promise<PatientAPIGetByIdResponse> {
+        try {
+            const { data } = await api.get(`/patients/${id}`);
+            if (data.success) {
+                return { success: true, data: PatientModel.fromDB(data.data), message: data.message };
+            }
+            return { success: false, message: data.error || 'Failed to fetch patient' };
+        } catch (err: any) {
+            return { success: false, message: err.response?.data?.error || err.message || 'Failed to fetch patient' };
+        }
+    },
+    async create(payload: PatientDB): Promise<PatientAPICreateResponse> {
+        try {
+            const { data } = await api.post('/patients', payload);
+            if (data.success) {
+                const response: PatientAPICreateResponse = {
+                    success: true,
+                    data: PatientModel.fromDB(data.data),
+                    message: data.message
+                }
+                return response;
+            }
+            return { success: false, message: data.error || 'Failed to create patient' };
+        } catch (err: any) {
+            return { success: false, message: err.response?.data?.error || err.message || 'Failed to create patient' };
+        }
+    }
+}
+

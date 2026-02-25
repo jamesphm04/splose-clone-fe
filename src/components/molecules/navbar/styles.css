@@ -1,0 +1,34 @@
+.header {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    background: #fff;
+}
+
+.logo {
+    color: #42694a;
+    font-weight: bold;
+    margin-right: 20px;
+    font-size: 18px;
+    background: #fff;
+}
+
+.menu {
+    flex: 1;
+}
+
+.user-name {
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.user-avatar {
+    cursor: pointer;
+    background: #2563eb;
+}

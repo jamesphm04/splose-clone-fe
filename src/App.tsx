@@ -6,6 +6,9 @@ import Auth from './pages/auth/Auth';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Dashboard from './pages/dashboard/Dashboard';
 import 'react-toastify/dist/ReactToastify.css';
+import Layout from './components/molecules/layout/Layout';
+import Patients from './pages/patients/Patients';
+import { NewPatient } from './pages/patients/new/NewPatient';
 
 function App() {
   return (
@@ -25,10 +28,33 @@ function App() {
               path="/dashboard"
               element={
                 <ProtectedRoute>
-                  <Dashboard />
+                  <Layout>
+                    <Dashboard />
+                  </Layout>
                 </ProtectedRoute>
               }
             />
+            <Route path="/patients" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Patients />
+                </Layout>
+              </ProtectedRoute>}
+            />
+            <Route path="/patients/:id" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Patients />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/patients/new" element={
+              <ProtectedRoute>
+                <Layout>
+                  <NewPatient />
+                </Layout>
+              </ProtectedRoute>
+            } />
             <Route path="/" element={<Navigate to="/login" replace />} />
           </Routes>
         </Router>

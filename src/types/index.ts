@@ -33,3 +33,23 @@ export interface AuthResponse {
     refreshToken?: string;
     message?: string;
 }
+
+export interface Patient {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+    gender: string;
+    fullAddress: string;
+}
+
+export interface PatientDB {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+    gender: string;
+    fullAddress: string;
+}
