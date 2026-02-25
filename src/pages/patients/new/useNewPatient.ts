@@ -10,6 +10,13 @@ export const useNewPatient = () => {
     const [form] = Form.useForm()
     const { user } = useAuth();
 
+    const normFile = (e: any) => {
+        if (Array.isArray(e)) {
+            return e;
+        }
+        return e?.fileList;
+    };
+
     const handleSubmit = async (values: any) => {
         try {
             setLoading(true);
@@ -49,5 +56,6 @@ export const useNewPatient = () => {
         loading,
         navigate,
         handleSubmit,
+        normFile,
     }
 }

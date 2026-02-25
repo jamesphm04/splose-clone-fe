@@ -26,10 +26,10 @@ const Navbar = () => {
             <div className="logo">Splose Clone AI</div>
             <Menu
                 className="menu"
+                items={items}
                 theme="light"
                 mode="horizontal"
                 selectedKeys={selectedKey ? [selectedKey] : []}
-                items={items}
                 onClick={handleItemClick}
             />
             <div className="user-info">

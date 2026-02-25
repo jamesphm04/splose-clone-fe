@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Layout from './components/molecules/layout/Layout';
 import Patients from './pages/patients/Patients';
 import { NewPatient } from './pages/patients/new/NewPatient';
+import { Details } from './pages/patients/id/details/Details';
 
 function App() {
   return (
@@ -41,10 +42,10 @@ function App() {
                 </Layout>
               </ProtectedRoute>}
             />
-            <Route path="/patients/:id" element={
+            <Route path="/patients/:id/details" element={
               <ProtectedRoute>
                 <Layout>
-                  <Patients />
+                  <Details />
                 </Layout>
               </ProtectedRoute>
             } />

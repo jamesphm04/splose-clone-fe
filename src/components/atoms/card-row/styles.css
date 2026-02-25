@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 6px 0;
+}
+
+.label {
+    width: 160px;
+    font-weight: 600;
+    color: #5a5a5a;
+    flex-shrink: 0;
+}
+
+.value {
+    flex: 1;
+    color: #111;
+    word-break: break-word;
+}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { patientAPI } from "../../services/api";
-import type { Patient } from "../../types/patient";
+import type { Patient } from "../../types/Patient";
 import type { ColumnsType } from "antd/es/table";
 import { useNavigate } from 'react-router-dom'
 

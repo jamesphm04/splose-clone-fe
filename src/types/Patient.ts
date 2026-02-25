@@ -6,6 +6,7 @@ export interface Patient {
     dateOfBirth: string;
     gender: string;
     fullAddress: string;
+    phoneNumber: string;
 }
 
 export interface PatientDB {
@@ -16,6 +17,7 @@ export interface PatientDB {
     dateOfBirth: string;
     gender: string;
     fullAddress: string;
+    phoneNumber: string;
     userId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -47,6 +49,7 @@ export class PatientModel implements Patient {
     dateOfBirth: string;
     gender: string;
     fullAddress: string;
+    phoneNumber: string;
 
     constructor(patient: Patient) {
         this.id = patient.id;
@@ -56,6 +59,7 @@ export class PatientModel implements Patient {
         this.dateOfBirth = patient.dateOfBirth;
         this.gender = patient.gender;
         this.fullAddress = patient.fullAddress;
+        this.phoneNumber = patient.phoneNumber;
     }
 
     static fromDB(db: any): PatientModel {
@@ -67,6 +71,7 @@ export class PatientModel implements Patient {
             dateOfBirth: db.dateOfBirth || '',
             gender: db.gender || '',
             fullAddress: db.fullAddress || '',
-        });
+            phoneNumber: db.phoneNumber || '',
+        } as Patient);
     }
 }

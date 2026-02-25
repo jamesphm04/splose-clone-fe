@@ -1,0 +1,18 @@
+.main {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - 128px);
+}
+
+.content {
+    flex: 1;
+    background: #ffffff;
+}
+
+.font-24 {
+    font-size: 24px;
+}
+
+.card-container {
+    padding: 15px;
+}

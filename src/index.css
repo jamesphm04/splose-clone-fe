@@ -35,3 +35,13 @@ body {
     display: none;
   }
 }
+
+.page-container {
+  height: calc(100vh - 64px);
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #42694a;
+}
