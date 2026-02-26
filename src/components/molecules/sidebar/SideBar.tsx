@@ -6,7 +6,7 @@ import { useSideBar } from './useSideBar';
 
 interface SideBarProps {
     items: { label: string; key: string }[];
-    selectedKey: string | "details";
+    selectedKey?: string | "details";
     handleItemClick: (e: any) => void;
 }
 

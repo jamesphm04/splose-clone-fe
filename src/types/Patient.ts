@@ -11,13 +11,13 @@ export interface Patient {
 
 export interface PatientDB {
     id?: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    dateOfBirth: string;
-    gender: string;
-    fullAddress: string;
-    phoneNumber: string;
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+    dateOfBirth?: string;
+    gender?: string;
+    fullAddress?: string;
+    phoneNumber?: string;
     userId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -41,6 +41,11 @@ export interface PatientAPICreateResponse {
     message?: string;
 }
 
+export interface PatientAPIUpdateResponse {
+    success: boolean;
+    data?: Patient;
+    message?: string;
+}
 export class PatientModel implements Patient {
     id: string;
     email: string;

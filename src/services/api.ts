@@ -1,6 +1,8 @@
 import axios from 'axios';
 import type { AuthResponse, LoginCredentials } from '../types';
-import { PatientModel, type PatientDB, type PatientAPIFetchResponse, type PatientAPIGetByIdResponse, type Patient, type PatientAPICreateResponse } from '../types/Patient';
+import { PatientModel, type PatientDB, type PatientAPIFetchResponse, type PatientAPIGetByIdResponse, type Patient, type PatientAPICreateResponse, type PatientAPIUpdateResponse } from '../types/Patient';
+import { authLogout } from '../utils/auth';
+import { message } from 'antd';
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api/v1',
@@ -18,27 +20,48 @@ api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
-        if (error.response?.status === 401 && !originalRequest._retry) {
+
+        if (
+            error.response?.status === 401 &&
+            !originalRequest._retry &&
+            !originalRequest.url.includes('/auth/login') &&
+            !originalRequest.url.includes('/auth/refresh')
+        ) {
             originalRequest._retry = true;
+
             const refreshToken = localStorage.getItem('refreshToken');
-            if (refreshToken) {
-                try {
-                    const { data } = await api.post('/auth/refresh', { refreshToken });
-                    if (data.success) {
-                        const { accessToken, refreshToken } = data.data.tokens;
-                        localStorage.setItem('accessToken', accessToken);
-                        localStorage.setItem('refreshToken', refreshToken);
-                        originalRequest.headers.set('Authorization', `Bearer ${accessToken}`);
-                        return api.request(originalRequest);
-                    }
-                } catch {
-                    return Promise.reject(error);
+
+            if (!refreshToken) {
+                authLogout();
+                return Promise.reject(error);
+            }
+
+            try {
+                const { data } = await api.post('/auth/refresh', { refreshToken });
+
+                if (data.success) {
+                    const { accessToken, refreshToken: newRefreshToken } = data.data.tokens;
+
+                    localStorage.setItem('accessToken', accessToken);
+                    localStorage.setItem('refreshToken', newRefreshToken);
+
+                    originalRequest.headers.set('Authorization', `Bearer ${accessToken}`);
+                    return api(originalRequest);
                 }
+                message.error('Session expired. Please login again.');
+                authLogout();
+                return Promise.reject(error);
+
+            } catch (err) {
+                authLogout();
+                return Promise.reject(err);
             }
         }
+
         return Promise.reject(error);
     }
 );
+
 
 export default api;
 
@@ -58,9 +81,11 @@ export const authAPI = {
             return { success: false, message: err.response?.data?.error || err.message || 'Login failed' };
         }
     },
-    // async logout(): Promise<void> {
-    //     await api.post('/auth/logout');
-    // }
+    async logout(): Promise<void> {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+    }
 };
 
 export const patientAPI = {
@@ -107,6 +132,22 @@ export const patientAPI = {
             return { success: false, message: data.error || 'Failed to create patient' };
         } catch (err: any) {
             return { success: false, message: err.response?.data?.error || err.message || 'Failed to create patient' };
+        }
+    },
+    async update(id: string, payload: PatientDB): Promise<PatientAPIUpdateResponse> {
+        try {
+            const { data } = await api.patch(`/patients/${id}`, payload);
+            if (data.success) {
+                const response: PatientAPIUpdateResponse = {
+                    success: true,
+                    data: PatientModel.fromDB(data.data),
+                    message: data.message
+                }
+                return response;
+            }
+            return { success: false, message: data.error || 'Failed to update patient' };
+        } catch (err: any) {
+            return { success: false, message: err.response?.data?.error || err.message || 'Failed to update patient' };
         }
     }
 }
