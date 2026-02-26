@@ -39,7 +39,7 @@ export const useNewPatient = () => {
             const response = await patientAPI.create(payload);
             if (response.success) {
                 antMessage.success(`Patient ${response.data?.firstName} ${response.data?.lastName} created successfully`);
-                navigate(`/patients/${response.data?.id}` || '/patients');
+                navigate(`/patients/${response.data?.id}/details` || '/patients');
                 form.resetFields();
             } else {
                 antMessage.error(response.message || 'Failed to create patient');

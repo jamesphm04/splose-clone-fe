@@ -1,18 +1,39 @@
 import { useState, useEffect } from "react";
-import { patientAPI } from "../../../../services/api";
+import { patientAPI, noteAPI } from "../../../../services/api";
 import type { Patient, PatientDB } from "../../../../types/Patient";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Form, message } from "antd";
 import dayjs from "dayjs";
+import type { Note, User } from "../../../../types";
+import type { ColumnsType } from "antd/es/table";
+
 export const sideBarItems = [
     { label: 'Details', key: 'details' },
     { label: 'Appointments', key: 'appointments' },
-    { label: 'Progress notes', key: 'progress-notes' },
+    { label: 'Progress notes', key: 'notes' },
     { label: 'Invoices', key: 'invoices' },
+]
+
+export const noteTableColumns: ColumnsType<Note> = [
+    { title: 'Title', dataIndex: 'title', key: 'title' },
+    { title: 'Created By', dataIndex: 'user', key: 'user', render: (user: User) => `${user.username}` },
+    {
+        title: 'Created At',
+        dataIndex: 'createdAt',
+        key: 'createdAt',
+        render: (createdAt: string) => dayjs(createdAt).format('dddd DD MMM YYYY, hh:mm A')
+    },
+    {
+        title: 'Updated At',
+        dataIndex: 'updatedAt',
+        key: 'updatedAt',
+        render: (updatedAt: string) => dayjs(updatedAt).format('dddd DD MMM YYYY, hh:mm A')
+    },
 ]
 
 export const useDetails = () => {
     const [patient, setPatient] = useState<Patient | null>(null)
+    const [notes, setNotes] = useState<Note[]>([])
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
@@ -31,7 +52,18 @@ export const useDetails = () => {
 
     useEffect(() => {
         fetchPatient()
+        fetchProgressNotes()
     }, [id])
+
+    const fetchProgressNotes = async () => {
+        if (!id) return;
+        const response = await noteAPI.getByPatientId(id)
+        if (response.success) {
+            setNotes(response.data || [])
+        } else {
+            message.error(response.message || `Failed to fetch notes for patient ${id}`)
+        }
+    }
 
     const fetchPatient = async () => {
         if (!id) return;
@@ -99,6 +131,8 @@ export const useDetails = () => {
     };
     return {
         patient,
+        notes,
+        noteTableColumns,
         isEditing,
         loading,
         form,

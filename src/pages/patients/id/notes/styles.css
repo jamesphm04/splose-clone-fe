@@ -1,0 +1,28 @@
+    .main {
+        display: flex;
+        flex-direction: row;
+        height: calc(100vh - 128px);
+    }
+
+    .content {
+        flex: 1;
+        background: #ffffff;
+    }
+
+    .font-24 {
+        font-size: 24px;
+    }
+
+    .table-container {
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .table-search-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 15px;
+    }

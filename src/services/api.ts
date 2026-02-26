@@ -1,6 +1,7 @@
 import axios from 'axios';
-import type { AuthResponse, LoginCredentials } from '../types';
+import type { AuthResponse, LoginCredentials, User } from '../types';
 import { PatientModel, type PatientDB, type PatientAPIFetchResponse, type PatientAPIGetByIdResponse, type Patient, type PatientAPICreateResponse, type PatientAPIUpdateResponse } from '../types/Patient';
+import { type Note, type NoteAPIGetByPatientIdResponse } from '../types/Note';
 import { authLogout } from '../utils/auth';
 import { message } from 'antd';
 
@@ -152,3 +153,40 @@ export const patientAPI = {
     }
 }
 
+export const noteAPI = {
+    async getByPatientId(patientId: string): Promise<NoteAPIGetByPatientIdResponse> {
+        try {
+            const { data } = await api.get(`/notes/patient/${patientId}`);
+            if (data.success) {
+
+                const notes: Note[] = data.data.map((db: any) => {
+
+                    const user: User = {
+                        id: db.user.id,
+                        username: db.user.username,
+                        email: db.user.email,
+                    }
+                    return {
+                        id: db.id,
+                        patientId: db.patientId,
+                        userId: db.userId,
+                        title: db.title,
+                        content: db.content,
+                        createdAt: db.createdAt,
+                        updatedAt: db.updatedAt,
+                        user: user,
+                    } as Note;
+                })
+                const response: NoteAPIGetByPatientIdResponse = {
+                    success: true,
+                    data: notes,
+                    message: data.message
+                }
+                return response;
+            }
+            return { success: false, message: data.error || `Failed to fetch notes for patient ${patientId}` };
+        } catch (err: any) {
+            return { success: false, message: err.response?.data?.error || err.message || `Failed to fetch notes for patient ${patientId}` };
+        }
+    }
+}

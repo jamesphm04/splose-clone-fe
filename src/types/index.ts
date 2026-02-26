@@ -18,12 +18,14 @@ export interface ChatMessage {
     audioUrl?: string;
 }
 
-export interface ProgressNote {
+export interface Note {
     id: string;
-    patientName: string;
-    sessionDate: string;
+    patientId: string;
+    user: User;
+    title: string;
     content: string;
-    lastModified: Date;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface AuthResponse {

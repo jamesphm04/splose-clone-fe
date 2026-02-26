@@ -10,6 +10,7 @@ import Layout from './components/molecules/layout/Layout';
 import Patients from './pages/patients/Patients';
 import { NewPatient } from './pages/patients/new/NewPatient';
 import { Details } from './pages/patients/id/details/Details';
+import { Notes } from './pages/patients/id/notes/Notes';
 
 function App() {
   return (
@@ -46,6 +47,13 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <Details />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/patients/:id/notes" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Notes />
                 </Layout>
               </ProtectedRoute>
             } />
