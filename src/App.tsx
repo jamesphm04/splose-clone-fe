@@ -11,6 +11,8 @@ import Patients from './pages/patients/Patients';
 import { NewPatient } from './pages/patients/new/NewPatient';
 import { Details } from './pages/patients/id/details/Details';
 import { Notes } from './pages/patients/id/notes/Notes';
+import { New as NewNote } from './pages/patients/id/notes/new/New';
+import { Edit as EditNote } from './pages/patients/id/notes/id/edit/Edit';
 
 function App() {
   return (
@@ -25,6 +27,7 @@ function App() {
       <AuthProvider>
         <Router>
           <Routes>
+            <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<Auth />} />
             <Route
               path="/dashboard"
@@ -64,7 +67,20 @@ function App() {
                 </Layout>
               </ProtectedRoute>
             } />
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/notes/new" element={
+              <ProtectedRoute>
+                <Layout>
+                  <NewNote />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/notes/:id/edit" element={
+              <ProtectedRoute>
+                <Layout>
+                  <EditNote />
+                </Layout>
+              </ProtectedRoute>
+            } />
           </Routes>
         </Router>
       </AuthProvider>

@@ -26,24 +26,28 @@ export interface PatientDB {
 export interface PatientAPIFetchResponse {
     success: boolean;
     data?: Patient[];
+    error?: string;
     message?: string;
 }
 
 export interface PatientAPIGetByIdResponse {
     success: boolean;
     data?: Patient;
+    error?: string;
     message?: string;
 }
 
 export interface PatientAPICreateResponse {
     success: boolean;
     data?: Patient;
+    error?: string;
     message?: string;
 }
 
 export interface PatientAPIUpdateResponse {
     success: boolean;
     data?: Patient;
+    error?: string;
     message?: string;
 }
 export class PatientModel implements Patient {

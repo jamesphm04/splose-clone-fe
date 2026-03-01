@@ -5,13 +5,12 @@ import { Header } from "antd/es/layout/layout";
 import { MessageOutlined, MailOutlined, MoreOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import ButtonGroup from "antd/es/button/ButtonGroup"
 import { useDetails } from "../details/useDetails";
-import { SideBar } from "../../../../components/molecules/sidebar/SideBar";
+import { SideBar } from "@/components/molecules/sidebar/SideBar";
+import type { Note } from "@/types";
 
 export const Notes: React.FC = () => {
-
     const {
         noteTableColumns,
-        notes,
         patient,
         sideBarItems,
         selectedSideBarItem,
@@ -19,7 +18,13 @@ export const Notes: React.FC = () => {
         handleNewEmail,
         handleActions,
         handleSideBarItemClick,
+        handleNewNote,
     } = useDetails();
+
+    const {
+        notes,
+        handleRowDoubleClick,
+    } = useNotes();
 
 
     return patient ? (
@@ -45,14 +50,21 @@ export const Notes: React.FC = () => {
                 <div className="content">
                     <Header className="header font-24" >
                         <span className="page-title">Progress notes</span>
-                        <Button type="primary" icon={<PlusOutlined />}>New note</Button>
+                        <Button type="primary" icon={<PlusOutlined />} onClick={handleNewNote}>New note</Button>
                     </Header>
                     <div className="table-container">
                         <div className="table-search-container">
                             <Input placeholder="Search for content and title" />
                             <Button icon={<SearchOutlined />}>Search</Button>
                         </div>
-                        <Table dataSource={notes} columns={noteTableColumns} />
+                        <Table
+                            dataSource={notes}
+                            columns={noteTableColumns}
+                            rowKey="id"
+                            onRow={(record: Note) => ({
+                                onDoubleClick: () => handleRowDoubleClick(record),
+                            })}
+                        />
                     </div>
                 </div>
             </div>

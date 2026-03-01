@@ -1,27 +1,12 @@
-import { useState, useEffect } from 'react';
-import { notesAPI } from '../../../services/mockAPI';
+import { useState } from 'react';
 
 export type ViewMode = 'edit' | 'preview';
 
-const useMarkdownEditor = () => {
-    const [content, setContent] = useState('');
-    const [viewMode, setViewMode] = useState<ViewMode>('edit');
-    const [loading, setLoading] = useState(true);
-
-
-    useEffect(() => {
-        loadNote();
-    }, []);
-
-    const loadNote = async () => {
-        setLoading(true);
-        try {
-            const note = await notesAPI.loadNote();
-            setContent(note);
-        } finally {
-            setLoading(false);
-        }
-    };
+const useMarkdownEditor = (
+    content: string,
+    handleChangeContent: (value: string) => void
+) => {
+    const [viewMode, setViewMode] = useState<ViewMode>('preview');
 
     const insertMarkdown = (prefix: string, suffix: string = '') => {
         const textarea = document.getElementById('markdown-textarea') as HTMLTextAreaElement;
@@ -37,7 +22,7 @@ const useMarkdownEditor = () => {
             suffix +
             content.substring(end);
 
-        setContent(newText);
+        handleChangeContent(newText);
 
         setTimeout(() => {
             textarea.focus();
@@ -48,13 +33,10 @@ const useMarkdownEditor = () => {
         }, 0);
     };
 
-
-
     return {
-        loading,
         content,
         viewMode,
-        setContent,
+        handleChangeContent,
         setViewMode,
         insertMarkdown,
     };

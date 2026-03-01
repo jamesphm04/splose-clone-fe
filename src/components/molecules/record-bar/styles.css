@@ -1,0 +1,233 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.rb-root {
+    min-height: 100vh;
+    background: #0c0c0d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    padding: 24px;
+}
+
+.rb-wrap {
+    width: 100%;
+    max-width: 480px;
+}
+
+/* ── Idle ─────────────────────────────────────────────────────────────────── */
+.rb-idle {
+    display: flex;
+    justify-content: center;
+}
+
+.rb-mic-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1.5px solid #2a2a2e;
+    background: #141416;
+    color: #888;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.rb-mic-btn:hover {
+    border-color: #ff3c3c;
+    color: #ff3c3c;
+}
+
+/* ── Recording / Paused bar ───────────────────────────────────────────────── */
+.rb-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.rb-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Pulse dot */
+.rb-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ff3c3c;
+    flex-shrink: 0;
+    animation: rb-pulse 1.2s ease-in-out infinite;
+}
+
+.rb-pulse.paused {
+    background: #f8f8f8;
+    animation: none;
+}
+
+@keyframes rb-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.4;
+        transform: scale(0.7);
+    }
+}
+
+.rb-time {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: #aaa;
+    flex: 1;
+}
+
+.rb-time span {
+    color: #555;
+}
+
+/* Action buttons row */
+.rb-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.rb-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid #222;
+    background: #141416;
+    color: #888;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s;
+}
+
+.rb-btn:hover {
+    border-color: #444;
+    color: #ccc;
+}
+
+.rb-btn.danger {
+    border-color: #3a1414;
+}
+
+.rb-btn.danger:hover {
+    border-color: #ff3c3c;
+    color: #ff3c3c;
+    background: #1a0a0a;
+}
+
+.rb-btn.accent {
+    border-color: #1a2a3a;
+}
+
+.rb-btn.accent:hover {
+    border-color: #4d9fff;
+    color: #4d9fff;
+    background: #0a121a;
+}
+
+/* Progress track */
+.rb-track {
+    height: 2px;
+    background: #1e1e22;
+    border-radius: 1px;
+    position: relative;
+}
+
+.rb-fill {
+    height: 100%;
+    background: #ff3c3c;
+    border-radius: 1px;
+    transition: width 0.5s linear;
+}
+
+.rb-fill.paused {
+    background: #444;
+}
+
+/* ── Playback (stopped state) ─────────────────────────────────────────────── */
+.rb-playback {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.rb-pb-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rb-pb-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: #444;
+    text-transform: uppercase;
+    flex: 1;
+}
+
+/* Scrub slider */
+.rb-scrub {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 2px;
+    background: #1e1e22;
+    border-radius: 1px;
+    outline: none;
+    cursor: pointer;
+}
+
+.rb-scrub::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.rb-scrub::-webkit-slider-thumb:hover {
+    transform: scale(1.3);
+}
+
+.rb-scrub::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.rb-pb-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.rb-divider {
+    width: 1px;
+    height: 20px;
+    background: #222;
+    margin: 0 2px;
+}

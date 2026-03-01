@@ -6,22 +6,23 @@ import {
     ItalicOutlined,
     OrderedListOutlined,
     UnorderedListOutlined,
-    CodeOutlined,
 } from '@ant-design/icons';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import useMarkdownEditor from './useMarkdownEditor';
 import { type ViewMode } from './useMarkdownEditor';
 
-const MarkdownEditor: React.FC = () => {
+interface MarkdownEditorProps {
+    content: string;
+    handleChangeContent: (value: string) => void;
+}
+
+const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ content, handleChangeContent }) => {
     const {
-        loading,
-        content,
         viewMode,
-        setContent,
         setViewMode,
         insertMarkdown,
-    } = useMarkdownEditor();
+    } = useMarkdownEditor(content, handleChangeContent);
 
     const toolbarButtons = [
         {
@@ -49,15 +50,7 @@ const MarkdownEditor: React.FC = () => {
             tooltip: 'Numbered List',
             onClick: () => insertMarkdown('1. ', ''),
         },
-        {
-            icon: <CodeOutlined />,
-            tooltip: 'Code Block',
-            onClick: () => insertMarkdown('```\n', '\n```'),
-        },
     ];
-    if (loading) {
-        return <div className="markdown-loading">Loading...</div>;
-    }
     return (
         <div className="markdown-editor">
             <div className="editor-toolbar">
@@ -88,7 +81,7 @@ const MarkdownEditor: React.FC = () => {
                         id="markdown-textarea"
                         className="markdown-textarea"
                         value={content}
-                        onChange={(e) => setContent(e.target.value)}
+                        onChange={(e) => handleChangeContent(e.target.value as string)}
                         placeholder="Start writing your progress note..."
                     />
                 ) : (

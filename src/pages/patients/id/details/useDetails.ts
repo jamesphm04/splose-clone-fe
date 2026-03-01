@@ -33,11 +33,10 @@ export const noteTableColumns: ColumnsType<Note> = [
 
 export const useDetails = () => {
     const [patient, setPatient] = useState<Patient | null>(null)
-    const [notes, setNotes] = useState<Note[]>([])
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
-    const { id } = useParams<{ id: string }>();
+    const { id: patientId } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -46,28 +45,17 @@ export const useDetails = () => {
     )?.key || 'details';
 
     const handleSideBarItemClick = (e: any) => {
-        if (!id) return;
-        navigate(`/patients/${id}/${e.key}`);
+        if (!patientId) return;
+        navigate(`/patients/${patientId}/${e.key}`);
     }
 
     useEffect(() => {
         fetchPatient()
-        fetchProgressNotes()
-    }, [id])
-
-    const fetchProgressNotes = async () => {
-        if (!id) return;
-        const response = await noteAPI.getByPatientId(id)
-        if (response.success) {
-            setNotes(response.data || [])
-        } else {
-            message.error(response.message || `Failed to fetch notes for patient ${id}`)
-        }
-    }
+    }, [patientId])
 
     const fetchPatient = async () => {
-        if (!id) return;
-        const response = await patientAPI.getById(id)
+        if (!patientId) return;
+        const response = await patientAPI.getById(patientId)
         if (response.success) {
             setPatient(response.data || null)
         }
@@ -98,7 +86,7 @@ export const useDetails = () => {
         const values = await form.validateFields();
         console.log("Updated values:", values);
 
-        if (!id) return;
+        if (!patientId) return;
 
         const payload: PatientDB = {
             firstName: values.firstName,
@@ -112,9 +100,9 @@ export const useDetails = () => {
 
         try {
             setLoading(true);
-            const response = await patientAPI.update(id, payload);
+            const response = await patientAPI.update(patientId, payload);
             if (response.success) {
-                message.success('Patient detailsupdated successfully');
+                message.success('Patient details updated successfully');
                 setPatient(response.data || null);
                 setIsEditing(false);
                 form.resetFields();
@@ -129,9 +117,12 @@ export const useDetails = () => {
         }
         setIsEditing(false);
     };
+    const handleNewNote = () => {
+        if (!patientId) return;
+        navigate(`/notes/new?patientId=${patientId}`);
+    }
     return {
         patient,
-        notes,
         noteTableColumns,
         isEditing,
         loading,
@@ -145,5 +136,6 @@ export const useDetails = () => {
         handleSideBarItemClick,
         handleCancel,
         handleSubmitEdit,
+        handleNewNote,
     }
 }

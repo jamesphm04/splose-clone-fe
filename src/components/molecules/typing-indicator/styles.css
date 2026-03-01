@@ -1,0 +1,28 @@
+.chat-message {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.chat-message.user {
+    flex-direction: row-reverse;
+}
+
+.message-content p {
+    margin: 0;
+    font-size: 140px;
+    line-height: 1.5;
+    color: red;
+    word-wrap: break-word;
+}
+
+.chat-message.user .message-content {
+    background: #eff6ff;
+    border: 1px solid #dbeafe;
+}
+
+.typing-indicator {
+    color: #6b7280;
+    font-style: italic;
+}

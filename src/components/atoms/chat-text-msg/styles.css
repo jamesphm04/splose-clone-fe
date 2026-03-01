@@ -1,0 +1,14 @@
+.chat-text-msg {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+.chat-text-msg.user {
+    color: #fff;
+}
+
+.chat-text-msg.assistant {
+    color: #1f2937;
+}

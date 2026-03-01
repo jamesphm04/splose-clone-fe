@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { AuthResponse, LoginCredentials, User } from '../types';
 import { PatientModel, type PatientDB, type PatientAPIFetchResponse, type PatientAPIGetByIdResponse, type Patient, type PatientAPICreateResponse, type PatientAPIUpdateResponse } from '../types/Patient';
-import { type Note, type NoteAPIGetByPatientIdResponse } from '../types/Note';
+import { NoteModel, type Note, type NoteAPICreateUpdateRequest, type NoteAPICreateResponse, type NoteAPIGetByPatientIdResponse, type NoteAPIGetByIdResponse } from '../types/Note';
 import { authLogout } from '../utils/auth';
 import { message } from 'antd';
 
@@ -154,6 +154,18 @@ export const patientAPI = {
 }
 
 export const noteAPI = {
+    async getById(id: string): Promise<NoteAPIGetByIdResponse> {
+        try {
+            const { data } = await api.get(`/notes/${id}`);
+            if (data.success) {
+                return { success: true, data: NoteModel.fromDB(data.data), message: data.message };
+            }
+            return { success: false, message: data.error || 'Failed to fetch note' };
+        }
+        catch (err: any) {
+            return { success: false, message: err.response?.data?.error || err.message || 'Failed to fetch note' };
+        }
+    },
     async getByPatientId(patientId: string): Promise<NoteAPIGetByPatientIdResponse> {
         try {
             const { data } = await api.get(`/notes/patient/${patientId}`);
@@ -187,6 +199,39 @@ export const noteAPI = {
             return { success: false, message: data.error || `Failed to fetch notes for patient ${patientId}` };
         } catch (err: any) {
             return { success: false, message: err.response?.data?.error || err.message || `Failed to fetch notes for patient ${patientId}` };
+        }
+    },
+    async create(payload: NoteAPICreateUpdateRequest): Promise<NoteAPICreateResponse> {
+        try {
+            const { data }: { data: NoteAPICreateResponse } = await api.post('/notes', payload);
+            if (data.success) {
+                return { success: true, data: data.data, message: "Note created successfully" };
+            }
+            return { success: false, message: data?.error || 'Failed to create note' };
+        } catch (err: any) {
+            return { success: false, message: err.response?.data?.error || err.message || 'Failed to create note' };
+        }
+    },
+    async update(id: string, payload: NoteAPICreateUpdateRequest): Promise<{ success: boolean, message?: string }> {
+        try {
+            const { data } = await api.patch(`/notes/${id}`, payload);
+            if (data.success) {
+                return { success: true, message: "Note updated successfully" };
+            }
+            return { success: false, message: data.error || 'Failed to update note' };
+        } catch (err: any) {
+            return { success: false, message: err.response?.data?.error || err.message || 'Failed to update note' };
+        }
+    },
+    async delete(id: string): Promise<{ success: boolean, message?: string }> {
+        try {
+            const { data } = await api.delete(`/notes/${id}`);
+            if (data.success) {
+                return { success: true, message: "Note deleted successfully" };
+            }
+            return { success: false, message: data.error || 'Failed to delete note' };
+        } catch (err: any) {
+            return { success: false, message: err.response?.data?.error || err.message || 'Failed to delete note' };
         }
     }
 }

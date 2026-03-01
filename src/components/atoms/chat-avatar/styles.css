@@ -1,0 +1,16 @@
+.message-avatar {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.message-avatar.assistant {
+    background: #f1f3f6 !important;
+}
+
+.assistant-avatar-img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}

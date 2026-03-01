@@ -1,0 +1,37 @@
+.content {
+    height: calc(100vh - 128px);
+}
+
+.workspace {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+}
+
+.workspace-left {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.workspace-divider {
+    background: #e5e7eb;
+}
+
+.workspace-right {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #fafbfc;
+}
+
+.editable-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #42694a;
+    width: 500px;
+}
+
+.patient-name {
+    font-size: 16px;
+    color: #42694a;
+}

@@ -1,0 +1,9 @@
+.custom-container {
+    padding: 20px 35px;
+}
+
+.chat-input {
+    resize: none;
+    border-radius: 18px;
+    padding: .5rem .75rem;
+}

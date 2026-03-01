@@ -15,7 +15,6 @@ export const useAuth = () => {
         try {
             setLoading(true);
             const response = await authAPI.login({ email: values.email, password: values.password });
-            console.log(response);
             if (response.success && response.user && response.accessToken && response.refreshToken) {
                 await login(response.user, response.accessToken, response.refreshToken);
                 antMessage.success('Login successful');
