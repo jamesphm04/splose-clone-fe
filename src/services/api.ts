@@ -4,6 +4,7 @@ import { PatientModel, type PatientDB, type PatientAPIFetchResponse, type Patien
 import { NoteModel, type Note, type NoteAPICreateUpdateRequest, type NoteAPICreateResponse, type NoteAPIGetByPatientIdResponse, type NoteAPIGetByIdResponse } from '../types/Note';
 import { authLogout } from '../utils/auth';
 import { message } from 'antd';
+import type { SendMessagePayload, SendMessageResponse, SendMessageResponseDB, GetMessagesResponse } from '../types/chat';
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api/v1',
@@ -41,7 +42,7 @@ api.interceptors.response.use(
                 const { data } = await api.post('/auth/refresh', { refreshToken });
 
                 if (data.success) {
-                    const { accessToken, refreshToken: newRefreshToken } = data.data.tokens;
+                    const { accessToken, refreshToken: newRefreshToken } = data.data;
 
                     localStorage.setItem('accessToken', accessToken);
                     localStorage.setItem('refreshToken', newRefreshToken);
@@ -235,3 +236,67 @@ export const noteAPI = {
         }
     }
 }
+
+
+export const conversationAPI = {
+    async getMessages(noteID: string): Promise<GetMessagesResponse> {
+        try {
+            const { data } = await api.get(`/conversations/messages?noteID=${noteID}`);
+            if (data.success) {
+                return { success: true, data: data.data, message: 'Messages fetched successfully' };
+            }
+            return { success: false, message: data.error || 'Failed to fetch messages' };
+        } catch (err: any) {
+            return { success: false, message: err.response?.data?.error || err.message || 'Failed to fetch messages' };
+        }
+    },
+    async sendMessage(
+        payload: SendMessagePayload
+    ): Promise<SendMessageResponse> {
+        try {
+            const form = new FormData();
+
+            form.append('message', payload.message);
+            form.append('noteID', payload.noteID);
+
+            if (payload.attachment) {
+                form.append(
+                    'attachment',
+                    payload.attachment.blob,
+                    payload.attachment.name
+                );
+            }
+
+            const { data }: { data: SendMessageResponseDB } = await api.post(
+                `/conversations/send-message`,
+                form,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+
+            if (data.success) {
+                return {
+                    success: true,
+                    data: data.data,
+                    message: 'Message sent successfully',
+                };
+            }
+
+            return {
+                success: false,
+                message: data.error || 'Failed to send message',
+            };
+        } catch (err: any) {
+            return {
+                success: false,
+                message:
+                    err.response?.data?.error ||
+                    err.message ||
+                    'Failed to send message',
+            };
+        }
+    },
+};

@@ -7,3 +7,27 @@
     border-radius: 18px;
     padding: .5rem .75rem;
 }
+
+.attachment-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: #531dab;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+}
+
+.audio-player {
+    height: 28px;
+    flex: 1;
+    min-width: 50%;
+    max-width: 100%;
+}
+
+.attachment-chip {
+    background: #f9f0ff;
+    border: 1px solid #d3adf7;
+    border-radius: 8px;
+    padding: 6px 10px;
+}

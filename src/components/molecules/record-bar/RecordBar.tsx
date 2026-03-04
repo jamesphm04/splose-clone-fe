@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button, Progress, Typography, Space, Flex } from 'antd';
-import { FaStop } from "react-icons/fa";
+import { Button, Progress, Typography, Flex } from 'antd';
 import { useRecordBar } from './useRecordBar';
 import type { ProgressProps } from 'antd';
+import { FaRegCircleStop } from "react-icons/fa6";
 
 const twoColors: ProgressProps['strokeColor'] = {
     '0%': '#f8f8f8',
@@ -20,7 +20,7 @@ const RecordBar: React.FC<RecordBarProps> = ({
     recording,
     handleStopRecording,
 }) => {
-    const { percent, formattedTime } = useRecordBar(
+    const { percent, formattedTime, formattedMaxSeconds } = useRecordBar(
         recording,
         handleStopRecording
     );
@@ -32,8 +32,9 @@ const RecordBar: React.FC<RecordBarProps> = ({
             <Button
                 type="primary"
                 onClick={handleStopRecording}
-            >Send</Button>
-            <Text>{formattedTime} / 00:00:60</Text>
+                icon={<FaRegCircleStop />}
+            >Finish</Button>
+            <Text>{formattedTime} / {formattedMaxSeconds}</Text>
 
             <Progress
                 percent={percent}

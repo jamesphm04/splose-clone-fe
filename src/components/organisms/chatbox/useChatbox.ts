@@ -1,12 +1,54 @@
 import { useState, useRef, useEffect } from 'react';
-import type { ChatMessage } from '../../../types';
-import type { UploadFile } from 'antd';
-import { chatAPI } from '../../../services/mockAPI';
+import type { ChatMessage } from '@/types/chat';
+import { conversationAPI } from '@/services/api';
+import { useParams } from 'react-router-dom';
 import { message as antMessage } from 'antd';
 
 export const useChatbox = () => {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [loading, setLoading] = useState(false);
+
+    const { id: noteID } = useParams<{ id: string }>();
+
+    useEffect(() => {
+        fetchMessages();
+    }, [])
+
+    const fetchMessages = async () => {
+        if (!noteID) return;
+        setLoading(true);
+
+        try {
+            const response = await conversationAPI.getMessages(noteID);
+
+            const messages: ChatMessage[] = response.data?.map((messageDB) => {
+                const firstAttachment = messageDB.attachments?.[0];
+
+                return {
+                    role: messageDB.role,
+                    content: messageDB.content,
+                    ...(firstAttachment && {
+                        attachment: {
+                            name: firstAttachment.name,
+                            mimeType: firstAttachment.type,
+                            url: firstAttachment.url,
+                        },
+                    }),
+                };
+            }) ?? [];
+
+            if (response.success) {
+                setMessages(messages);
+            } else {
+                antMessage.error(response.message || 'Failed to fetch messages');
+            }
+        } catch (error) {
+            console.error(error);
+            antMessage.error('Failed to fetch messages');
+        } finally {
+            setLoading(false);
+        }
+    }
 
     useEffect(() => {
         scrollToBottom();

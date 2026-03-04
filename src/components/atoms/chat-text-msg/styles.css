@@ -12,3 +12,25 @@
 .chat-text-msg.assistant {
     color: #1f2937;
 }
+
+.attach-audio {
+    height: 28px;
+    max-width: 280px;
+}
+
+.attach-image {
+    max-width: 200px;
+    border-radius: 6px;
+}
+
+.attach-file {
+    font-size: 12px;
+    color: white;
+
+    max-width: 100px;
+    display: inline-block;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

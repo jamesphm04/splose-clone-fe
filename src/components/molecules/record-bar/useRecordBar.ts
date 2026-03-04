@@ -1,44 +1,49 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-const MAX_SECONDS = 60; // 1 minute
+const MAX_SECONDS = 60;
+
+const formatTime = (seconds: number) => {
+    return `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
+};
 
 export const useRecordBar = (
     recording: boolean,
-    stopRecording: () => void
+    handleStopRecording: () => void
 ) => {
     const [elapsed, setElapsed] = useState(0);
-    const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+    const formattedMaxSeconds = formatTime(MAX_SECONDS);
 
     useEffect(() => {
-        if (recording) {
-            timerRef.current = setInterval(() => {
-                setElapsed((prev) => {
-                    if (prev + 1 >= MAX_SECONDS) {
-                        stopRecording();
-                        return MAX_SECONDS;
-                    }
-                    return prev + 1;
-                });
-            }, 1000);
-        } else {
-            if (timerRef.current) clearInterval(timerRef.current);
+        if (!recording) {
+            // Reset when recording stops
+            if (intervalRef.current) clearInterval(intervalRef.current);
+            setElapsed(0);
+            return;
         }
 
+        setElapsed(0);
+        intervalRef.current = setInterval(() => {
+            setElapsed((s) => {
+                const next = s + 1;
+                if (next >= MAX_SECONDS) {
+                    // Auto-stop at the limit
+                    clearInterval(intervalRef.current!);
+                    handleStopRecording();
+                }
+                return next;
+            });
+        }, 1000);
+
         return () => {
-            if (timerRef.current) clearInterval(timerRef.current);
+            if (intervalRef.current) clearInterval(intervalRef.current);
         };
-    }, [recording, stopRecording]);
+    }, [recording]);
 
-    const percent = Number(((elapsed / MAX_SECONDS) * 100).toFixed(2));
+    const percent = Math.min((elapsed / MAX_SECONDS) * 100, 100);
 
-    const formattedTime = new Date(elapsed * 1000)
-        .toISOString()
-        .substring(11, 19);
+    const formattedTime = formatTime(elapsed);
 
-    return {
-        elapsed,
-        percent,
-        formattedTime,
-        maxSeconds: MAX_SECONDS,
-    };
+    return { percent, formattedTime, formattedMaxSeconds };
 };

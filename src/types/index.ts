@@ -8,16 +8,6 @@ export interface LoginCredentials {
     email: string;
     password: string;
 }
-
-export interface ChatMessage {
-    id: string;
-    role: 'user' | 'assistant';
-    content: string;
-    timestamp: Date;
-    imageUrl?: string;
-    audioUrl?: string;
-}
-
 export interface Note {
     id: string;
     patientId: string;
